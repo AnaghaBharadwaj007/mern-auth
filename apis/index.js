@@ -14,6 +14,19 @@ app.use(express.json());
 app.use("/api/user", userRoutes)
 app.use("/api/auth", authRoute);
 
+
+//this is the middleware to handle the error.
+//and don't have to send error msg in above codes, just do next(err) it will be passed down to here.
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const errmsg = err.message || "Internal server error"
+  return res.status(statusCode).json({
+    success: false,
+    error: errmsg,
+    statusCode,
+  })
+})
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 })
